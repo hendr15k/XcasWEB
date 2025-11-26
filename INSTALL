@@ -1,0 +1,69 @@
+Xcas (c) 2025, B. Parisse et al., GPL3 license (cf. COPYING)
+
+=======
+ENGLISH
+=======
+You can open xcas.html from your browser and run Xcas locally 
+without further installation (no Internet connection required).
+This version of Xcas is a little bit less complete
+and a little slower than a compiled version of Xcas for Windows, Mac OS
+or Linux, but it is simpler to install.
+
+Advanced users: if you uncompress on a web server, then Xcas becomes accessible from
+the Internet at this location. If you put Xcas sessions (with .xws
+extension) in the same directory on the web server, then you can refer to 
+the sessions with
+<a href="url_to_xcas.html#url=filename&" target="_blank">
+in an HTML file, e.g.
+<a href="xcas.html#url=session.xws&" target="_blank">
+if your HTML page is in the same directory as xcas.html.
+If the reader clicks on the link, he will open
+the session without any install. After download,
+all computations will be done on the reader's device, 
+that's more efficient than with a client-server.
+
+If you have a lot of sessions to share, you can store them in 
+separate subdirectories
+and refer to them with relative paths. On a Unix server, it is also possible to
+make a link to xcas.html from another directory. If you do that, 
+add also a link to doc from the xcas.html directory.
+
+========
+FRANCAIS
+========
+Vous pouvez ouvrir le fichier xcas.html depuis votre navigateur et exécuter
+Xcas en local sans autre opération d'installation et sans connexion Internet. 
+Cette version de Xcas est un peu moins complète et moins performante qu'une version 
+de Xcas compilée spécifiquement pour Windows, Mac OS ou Linux mais est très simple
+à installer.
+
+Utilisateurs avancés : si vous avez désarchivé dans un répertoire d'un
+serveur web, Xcas devient accessible depuis l'adresse
+Internet correspondante. Vous pouvez alors stocker au meme endroit que 
+xcas.html des sessions Xcas d'extension .xws et y faire
+référence depuis une page web avec la syntaxe de lien
+  <a href="url_to_xcas.html#url=filename&" target="_blank>
+par exemple
+  <a href="xcas.html#url=session.xws&" target="_blank">
+si xcas.html et la page web sont dans le même répertoire, ainsi que la session 
+session.xws.
+La personne qui consulte votre site web et
+clique sur le lien de la page HTML va alors exécuter la session dans
+son navigateur sans avoir besoin d'installer Xcas. 
+Notez que les calculs seront effectués sur la machine
+de la personne qui consulte la page HTML et pas sur votre serveur web, 
+ce qui est nettement plus sobre qu'une solution client-serveur
+application.
+
+Si vous avez beaucoup de sessions Xcas à partager, vous pouvez y faire
+les copier dans des sous-répertoires et y faire référence en
+ utilisant un chemin relatif.
+Sur un serveur Unix, vous pouvez aussi créer un lien vers xcas.html
+depuis un autre répertoire. Créez alors également un lien vers le répertoire
+doc du répertoire où se trouve xcas.html.
+
+===========
+SOURCE CODE
+===========
+https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac/emgiac3.tgz
+Compiles with emscripten 3
