@@ -1,0 +1,26 @@
+# Temp / OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.fuse_hidden*
+.Directory
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.sublime-*
+*.sublime-workspace
+
+# Build outputs (if any)
+*.o
+*.a
+*.so
+*.wasm
+*.js.map
+
+# Misc
+*.log
+*.bak
