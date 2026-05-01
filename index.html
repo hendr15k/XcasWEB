@@ -6,303 +6,99 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Xcas – Browser-based Computer Algebra System. Symbolic math, calculus, linear algebra, programming.">
+<meta name="description" content="Xcas — Browser-based Computer Algebra System. Symbolic math, calculus, linear algebra, programming. No install, works offline.">
 <meta name="theme-color" content="#0f0f1a">
 <title>Xcas — Computer Algebra System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;--bg2:#16162a;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);--text:#e8e8f0;--text2:#9898b0;
+  --accent:#6c5ce7;--accent2:#a78bfa;--glow:rgba(108,92,231,.25);
+  --grad1:#6c5ce7;--grad2:#a78bfa;--radius:16px;
+}
+[data-theme="light"]{
+  --bg:#f5f5fa;--bg2:#eeeff5;--surface:rgba(0,0,0,.03);--surface2:rgba(0,0,0,.06);
+  --border:rgba(0,0,0,.08);--text:#1a1a2e;--text2:#6b6b80;
+  --accent:#5a4bd1;--accent2:#7c6ce0;--glow:rgba(90,75,209,.15);
+}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-:root {
-  --bg: #0f0f1a;
-  --bg2: #16162a;
-  --surface: rgba(255,255,255,0.04);
-  --surface2: rgba(255,255,255,0.07);
-  --border: rgba(255,255,255,0.08);
-  --text: #e8e8f0;
-  --text2: #9898b0;
-  --accent: #6c5ce7;
-  --accent2: #a78bfa;
-  --glow: rgba(108,92,231,0.25);
-  --grad1: #6c5ce7;
-  --grad2: #a78bfa;
-  --radius: 16px;
-}
+/* Background effects */
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.4;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent)}
+.bg-glow{position:fixed;z-index:0;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:.15;pointer-events:none}
+.bg-glow.g1{top:-200px;left:30%;background:var(--grad1)}
+.bg-glow.g2{bottom:-200px;right:20%;background:var(--grad2)}
 
-[data-theme="light"] {
-  --bg: #f5f5fa;
-  --bg2: #eeeff5;
-  --surface: rgba(0,0,0,0.03);
-  --surface2: rgba(0,0,0,0.06);
-  --border: rgba(0,0,0,0.08);
-  --text: #1a1a2e;
-  --text2: #6b6b80;
-  --accent: #5a4bd1;
-  --accent2: #7c6ce0;
-  --glow: rgba(90,75,209,0.15);
-}
+.container{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:40px 20px;text-align:center}
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--surface2);border:1px solid var(--border);font-size:.8rem;color:var(--text2);margin-bottom:32px;backdrop-filter:blur(10px)}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 8px #00d68f;animation:pulse 2s infinite}
 
-.bg-grid {
-  position: fixed; inset: 0; z-index: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: 0.4;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
-}
+/* Hero */
+h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
+h1 .grad{background:linear-gradient(135deg,var(--grad1),var(--grad2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{font-size:clamp(1rem,2.5vw,1.3rem);color:var(--text2);max-width:540px;line-height:1.6;margin-bottom:40px}
 
-.bg-glow {
-  position: fixed; z-index: 0;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
-  pointer-events: none;
-}
-.bg-glow.g1 { top: -200px; left: 30%; background: var(--grad1); }
-.bg-glow.g2 { bottom: -200px; right: 20%; background: var(--grad2); }
+/* Actions */
+.actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:600;text-decoration:none;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--grad1),var(--grad2));color:#fff;box-shadow:0 4px 24px var(--glow),0 1px 2px rgba(0,0,0,.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--glow),0 2px 4px rgba(0,0,0,.3)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
+.btn-secondary:hover{background:var(--surface);border-color:var(--accent2);transform:translateY(-2px)}
 
-.container {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  min-height: 100dvh;
-  padding: 40px 20px;
-  text-align: center;
-}
+/* Features */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:800px;width:100%;margin-bottom:40px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;backdrop-filter:blur(12px);transition:all .25s;text-align:left}
+.card:hover{border-color:var(--accent2);background:var(--surface2);transform:translateY(-2px)}
+.card-icon{font-size:1.8rem;margin-bottom:12px}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.card p{font-size:.82rem;color:var(--text2);line-height:1.5}
 
-.badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 16px;
-  border-radius: 100px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  font-size: 0.8rem;
-  color: var(--text2);
-  margin-bottom: 32px;
-  backdrop-filter: blur(10px);
-}
-.badge .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #00d68f;
-  box-shadow: 0 0 8px #00d68f;
-  animation: pulse 2s infinite;
-}
+/* Footer */
+.footer{font-size:.75rem;color:var(--text2)}
+.footer a{color:var(--accent2);text-decoration:none}
+.footer a:hover{text-decoration:underline}
 
-h1 {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 16px;
-}
-h1 .grad {
-  background: linear-gradient(135deg, var(--grad1), var(--grad2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Theme toggle */
+.theme-toggle{position:fixed;top:20px;right:20px;z-index:100;width:40px;height:40px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;backdrop-filter:blur(10px)}
+.theme-toggle:hover{border-color:var(--accent2);transform:scale(1.05)}
 
-.subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: var(--text2);
-  max-width: 540px;
-  line-height: 1.6;
-  margin-bottom: 40px;
-}
-
-.actions {
-  display: flex; gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 60px;
-}
-
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-  border: none;
-  cursor: pointer;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--grad1), var(--grad2));
-  color: #fff;
-  box-shadow: 0 4px 24px var(--glow), 0 1px 2px rgba(0,0,0,0.2);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px var(--glow), 0 2px 4px rgba(0,0,0,0.3);
-}
-.btn-secondary {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-}
-.btn-secondary:hover {
-  background: var(--surface);
-  border-color: var(--accent2);
-  transform: translateY(-2px);
-}
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  max-width: 800px;
-  width: 100%;
-  margin-bottom: 40px;
-}
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  backdrop-filter: blur(12px);
-  transition: all 0.25s;
-  text-align: left;
-}
-.card:hover {
-  border-color: var(--accent2);
-  background: var(--surface2);
-  transform: translateY(-2px);
-}
-.card-icon {
-  font-size: 1.8rem;
-  margin-bottom: 12px;
-}
-.card h3 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.card p {
-  font-size: 0.82rem;
-  color: var(--text2);
-  line-height: 1.5;
-}
-
-.footer {
-  font-size: 0.75rem;
-  color: var(--text2);
-}
-.footer a { color: var(--accent2); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
-
-.theme-toggle {
-  position: fixed; top: 20px; right: 20px; z-index: 100;
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.25s;
-  backdrop-filter: blur(10px);
-}
-.theme-toggle:hover { border-color: var(--accent2); transform: scale(1.05); }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-@media (max-width: 600px) {
-  .actions { flex-direction: column; width: 100%; padding: 0 20px; }
-  .btn { width: 100%; justify-content: center; }
-  .features { grid-template-columns: 1fr; }
-}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@media(max-width:600px){.actions{flex-direction:column;width:100%;padding:0 20px}.btn{width:100%;justify-content:center}.features{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow g1"></div>
-  <div class="bg-glow g2"></div>
-
-  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
-
-  <div class="container">
-    <div class="badge"><span class="dot"></span> Offline-ready · No install required</div>
-    <h1><span class="grad">Xcas</span></h1>
-    <p class="subtitle">
-      Full computer algebra system in your browser. Symbolic math, calculus,
-      linear algebra, statistics &amp; programming — runs entirely on your device.
-    </p>
-    <div class="actions">
-      <a href="xcas.html" class="btn btn-primary">Launch Xcas →</a>
-      <a href="https://github.com/hendr15k/XcasWEB" class="btn btn-secondary" target="_blank">GitHub</a>
-    </div>
-    <div class="features">
-      <div class="card">
-        <div class="card-icon">∑</div>
-        <h3>Symbolic Math</h3>
-        <p>Algebra, calculus, equation solving with exact results.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📐</div>
-        <h3>Geometry</h3>
-        <p>2D/3D geometric constructions and transformations.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔢</div>
-        <h3>Linear Algebra</h3>
-        <p>Matrices, vectors, eigenvalues, decompositions.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Statistics</h3>
-        <p>Regression, distributions, hypothesis testing.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Offline First</h3>
-        <p>No server, no internet needed. Works anywhere.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔗</div>
-        <h3>Share Sessions</h3>
-        <p>Deep-link to saved .xws sessions via URL.</p>
-      </div>
-    </div>
-    <div class="footer">
-      Xcas © B. Parisse et al. · <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream</a> · GPL-3.0
-    </div>
+<div class="bg-grid"></div>
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
+<div class="container">
+  <div class="badge"><span class="dot"></span> Offline-ready · No install required</div>
+  <h1><span class="grad">Xcas</span></h1>
+  <p class="subtitle">Full computer algebra system in your browser. Symbolic math, calculus, linear algebra, statistics &amp; programming — runs entirely on your device.</p>
+  <div class="actions">
+    <a href="xcas.html" class="btn btn-primary">Launch Xcas →</a>
+    <a href="https://github.com/hendr15k/XcasWEB" class="btn btn-secondary" target="_blank">GitHub</a>
   </div>
-
-  <script>
-  function toggleTheme() {
-    var html = document.documentElement;
-    var isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀';
-    document.querySelector('meta[name="theme-color"]').content = isDark ? '#f5f5fa' : '#0f0f1a';
-    localStorage.setItem('xcas-theme', isDark ? 'light' : 'dark');
-  }
-  (function(){
-    var saved = localStorage.getItem('xcas-theme');
-    if (saved === 'light' || saved === 'dark') {
-      document.documentElement.setAttribute('data-theme', saved);
-      document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '☀' : '🌙';
-    }
-  })();
-  </script>
+  <div class="features">
+    <div class="card"><div class="card-icon">∑</div><h3>Symbolic Math</h3><p>Algebra, calculus, equation solving with exact results.</p></div>
+    <div class="card"><div class="card-icon">📐</div><h3>Geometry</h3><p>2D/3D geometric constructions and transformations.</p></div>
+    <div class="card"><div class="card-icon">🔢</div><h3>Linear Algebra</h3><p>Matrices, vectors, eigenvalues, decompositions.</p></div>
+    <div class="card"><div class="card-icon">📊</div><h3>Statistics</h3><p>Regression, distributions, hypothesis testing.</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h3>Offline First</h3><p>No server, no internet needed. Works anywhere.</p></div>
+    <div class="card"><div class="card-icon">🔗</div><h3>Share Sessions</h3><p>Deep-link to saved .xws sessions via URL.</p></div>
+  </div>
+  <div class="footer">Xcas © B. Parisse et al. · <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream</a> · GPL-3.0</div>
+</div>
+<script>
+function toggleTheme(){var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.querySelector('.theme-toggle').textContent=d?'🌙':'☀';document.querySelector('meta[name="theme-color"]').content=d?'#f5f5fa':'#0f0f1a';localStorage.setItem('xcas-theme',d?'light':'dark')}
+(function(){var s=localStorage.getItem('xcas-theme');if(s){document.documentElement.setAttribute('data-theme',s);document.querySelector('.theme-toggle').textContent=s==='dark'?'☀':'🌙'}})();
+</script>
 </body>
 </html>
