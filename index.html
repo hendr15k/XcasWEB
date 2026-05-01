@@ -11,94 +11,211 @@
 <title>Xcas — Computer Algebra System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0f1a;--bg2:#16162a;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
-  --border:rgba(255,255,255,.08);--text:#e8e8f0;--text2:#9898b0;
-  --accent:#6c5ce7;--accent2:#a78bfa;--glow:rgba(108,92,231,.25);
-  --grad1:#6c5ce7;--grad2:#a78bfa;--radius:16px;
+  --bg:#0a0a14;--bg2:#12122a;--surface:rgba(255,255,255,.03);--surface2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.07);--text:#eaeaf4;--text2:#8888a8;
+  --accent:#6c5ce7;--accent2:#a78bfa;--glow:rgba(108,92,231,.3);
+  --grad1:#6c5ce7;--grad2:#a78bfa;--grad3:#c084fc;
+  --radius:16px;--radius-sm:10px;
 }
 [data-theme="light"]{
-  --bg:#f5f5fa;--bg2:#eeeff5;--surface:rgba(0,0,0,.03);--surface2:rgba(0,0,0,.06);
-  --border:rgba(0,0,0,.08);--text:#1a1a2e;--text2:#6b6b80;
-  --accent:#5a4bd1;--accent2:#7c6ce0;--glow:rgba(90,75,209,.15);
+  --bg:#f4f4f9;--bg2:#eaeaf2;--surface:rgba(0,0,0,.03);--surface2:rgba(0,0,0,.05);
+  --border:rgba(0,0,0,.08);--text:#14142a;--text2:#6b6b80;
+  --accent:#5a4bd1;--accent2:#7c6ce0;--glow:rgba(90,75,209,.12);
 }
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
-/* Background effects */
-.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.4;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent)}
-.bg-glow{position:fixed;z-index:0;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:.15;pointer-events:none}
-.bg-glow.g1{top:-200px;left:30%;background:var(--grad1)}
-.bg-glow.g2{bottom:-200px;right:20%;background:var(--grad2)}
+/* ═══ Background ═══ */
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:.35;mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,black 20%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,black 20%,transparent 100%)}
+.bg-glow{position:fixed;z-index:0;border-radius:50%;filter:blur(140px);opacity:.12;pointer-events:none;will-change:transform}
+.bg-glow.g1{width:700px;height:700px;top:-250px;left:20%;background:var(--grad1);animation:floatGlow 20s ease-in-out infinite}
+.bg-glow.g2{width:500px;height:500px;bottom:-150px;right:15%;background:var(--grad3);animation:floatGlow 25s ease-in-out infinite reverse}
+@keyframes floatGlow{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-20px)}50%{transform:translate(-20px,30px)}75%{transform:translate(20px,10px)}}
 
-.container{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:40px 20px;text-align:center}
+/* ═══ Layout ═══ */
+.container{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:100dvh;padding:60px 24px 40px;text-align:center}
 
-/* Badge */
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--surface2);border:1px solid var(--border);font-size:.8rem;color:var(--text2);margin-bottom:32px;backdrop-filter:blur(10px)}
-.badge .dot{width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 8px #00d68f;animation:pulse 2s infinite}
+/* ═══ Nav ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(10,10,20,.6);border-bottom:1px solid var(--border);transition:all .3s}
+[data-theme="light"] .nav{background:rgba(244,244,249,.7)}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.nav-brand svg{flex-shrink:0}
+.nav-brand span{font-weight:700;font-size:1.1rem;letter-spacing:-.02em}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-link{font-size:.85rem;font-weight:500;color:var(--text2);text-decoration:none;padding:8px 14px;border-radius:var(--radius-sm);transition:all .2s}
+.nav-link:hover{color:var(--text);background:var(--surface2)}
+.nav-theme{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:1rem}
+.nav-theme:hover{border-color:var(--accent2);color:var(--text);transform:scale(1.08)}
 
-/* Hero */
-h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
-h1 .grad{background:linear-gradient(135deg,var(--grad1),var(--grad2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.subtitle{font-size:clamp(1rem,2.5vw,1.3rem);color:var(--text2);max-width:540px;line-height:1.6;margin-bottom:40px}
+/* ═══ Hero ═══ */
+.hero{margin-top:80px;margin-bottom:64px;max-width:700px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:.78rem;color:var(--text2);margin-bottom:28px;backdrop-filter:blur(10px);animation:fadeInUp .6s .1s both}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 8px #00d68f;animation:pulse 2s infinite}
+h1{font-size:clamp(3rem,9vw,5.5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:20px;animation:fadeInUp .6s .2s both}
+h1 .grad{background:linear-gradient(135deg,var(--grad1) 0%,var(--grad2) 50%,var(--grad3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gradShift 6s ease infinite}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.subtitle{font-size:clamp(1.05rem,2.5vw,1.35rem);color:var(--text2);max-width:520px;line-height:1.65;margin:0 auto 44px;animation:fadeInUp .6s .3s both}
 
-/* Actions */
-.actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:60px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:600;text-decoration:none;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer}
-.btn-primary{background:linear-gradient(135deg,var(--grad1),var(--grad2));color:#fff;box-shadow:0 4px 24px var(--glow),0 1px 2px rgba(0,0,0,.2)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--glow),0 2px 4px rgba(0,0,0,.3)}
-.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
-.btn-secondary:hover{background:var(--surface);border-color:var(--accent2);transform:translateY(-2px)}
+/* ═══ Actions ═══ */
+.actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:72px;animation:fadeInUp .6s .4s both}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;border-radius:14px;font-size:1rem;font-weight:600;text-decoration:none;transition:all .3s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
+.btn:hover::after{opacity:1}
+.btn-primary{background:linear-gradient(135deg,var(--grad1),var(--grad2));color:#fff;box-shadow:0 4px 20px var(--glow),0 1px 3px rgba(0,0,0,.2)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(--glow),0 2px 6px rgba(0,0,0,.25)}
+.btn-primary:active{transform:translateY(-1px)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
+.btn-secondary:hover{border-color:var(--accent2);transform:translateY(-2px);background:var(--surface2)}
 
-/* Features */
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:800px;width:100%;margin-bottom:40px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;backdrop-filter:blur(12px);transition:all .25s;text-align:left}
-.card:hover{border-color:var(--accent2);background:var(--surface2);transform:translateY(-2px)}
-.card-icon{font-size:1.8rem;margin-bottom:12px}
-.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
-.card p{font-size:.82rem;color:var(--text2);line-height:1.5}
+/* ═══ Features ═══ */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:840px;width:100%;margin-bottom:48px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;backdrop-filter:blur(12px);transition:all .3s cubic-bezier(.4,0,.2,1);text-align:left;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent2),transparent);opacity:0;transition:opacity .3s}
+.card:hover{border-color:rgba(167,139,250,.3);background:var(--surface2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.15)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:2rem;margin-bottom:14px;display:inline-block;transition:transform .3s}
+.card:hover .card-icon{transform:scale(1.15)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:8px;letter-spacing:-.01em}
+.card p{font-size:.82rem;color:var(--text2);line-height:1.55}
 
-/* Footer */
-.footer{font-size:.75rem;color:var(--text2)}
-.footer a{color:var(--accent2);text-decoration:none}
-.footer a:hover{text-decoration:underline}
+/* ═══ Keyboard Shortcuts ═══ */
+.shortcuts{max-width:840px;width:100%;margin-bottom:48px;animation:fadeInUp .6s .8s both}
+.shortcuts h2{font-size:1rem;font-weight:600;margin-bottom:16px;color:var(--text2)}
+.shortcut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.shortcut{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.82rem;color:var(--text2)}
+.shortcut kbd{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-family:'Inter',monospace;font-size:.75rem;font-weight:600;color:var(--text);min-width:28px;text-align:center}
 
-/* Theme toggle */
-.theme-toggle{position:fixed;top:20px;right:20px;z-index:100;width:40px;height:40px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;backdrop-filter:blur(10px)}
-.theme-toggle:hover{border-color:var(--accent2);transform:scale(1.05)}
+/* ═══ Footer ═══ */
+.footer{font-size:.75rem;color:var(--text2);padding:20px 0}
+.footer a{color:var(--accent2);text-decoration:none;transition:color .2s}
+.footer a:hover{color:var(--accent);text-decoration:underline}
 
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@media(max-width:600px){.actions{flex-direction:column;width:100%;padding:0 20px}.btn{width:100%;justify-content:center}.features{grid-template-columns:1fr}}
+/* ═══ Animations ═══ */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.card{animation:fadeInUp .5s calc(.5s + var(--i,0) * .08s) both}
+.card:nth-child(1){--i:0}
+.card:nth-child(2){--i:1}
+.card:nth-child(3){--i:2}
+.card:nth-child(4){--i:3}
+.card:nth-child(5){--i:4}
+.card:nth-child(6){--i:5}
+
+/* ═══ Responsive ═══ */
+@media(max-width:768px){
+  .features{grid-template-columns:repeat(2,1fr)}
+  .shortcut-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .features{grid-template-columns:1fr}
+  .actions{flex-direction:column;width:100%;max-width:320px}
+  .btn{width:100%;justify-content:center}
+  .shortcut-grid{grid-template-columns:1fr}
+  .nav-link{display:none}
+  h1{font-size:2.5rem}
+}
+
+/* ═══ Scroll Reveal ═══ */
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-glow g1"></div>
-<div class="bg-glow g2"></div>
-<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
-<div class="container">
-  <div class="badge"><span class="dot"></span> Offline-ready · No install required</div>
-  <h1><span class="grad">Xcas</span></h1>
-  <p class="subtitle">Full computer algebra system in your browser. Symbolic math, calculus, linear algebra, statistics &amp; programming — runs entirely on your device.</p>
-  <div class="actions">
-    <a href="xcas.html" class="btn btn-primary">Launch Xcas →</a>
-    <a href="https://github.com/hendr15k/XcasWEB" class="btn btn-secondary" target="_blank">GitHub</a>
+  <div class="bg-grid"></div>
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="/" class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="8" fill="url(#navg)"/>
+        <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="800" fill="#fff" font-family="Inter,sans-serif">∑</text>
+        <defs><linearGradient id="navg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6c5ce7"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+      </svg>
+      <span>Xcas</span>
+    </a>
+    <div class="nav-right">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="https://github.com/hendr15k/XcasWEB" class="nav-link" target="_blank">GitHub</a>
+      <button class="nav-theme" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge"><span class="dot"></span> Offline-ready · No install required</div>
+      <h1><span class="grad">Xcas</span></h1>
+      <p class="subtitle">Full computer algebra system in your browser. Symbolic math, calculus, linear algebra, statistics &amp; programming — runs entirely on your device.</p>
+      <div class="actions">
+        <a href="xcas.html" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Launch Xcas
+        </a>
+        <a href="https://github.com/hendr15k/XcasWEB" class="btn btn-secondary" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Source
+        </a>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div id="features" class="features">
+      <div class="card"><div class="card-icon">∑</div><h3>Symbolic Math</h3><p>Algebra, calculus, equation solving with exact results — no numerical approximation.</p></div>
+      <div class="card"><div class="card-icon">📐</div><h3>Geometry</h3><p>Interactive 2D/3D geometric constructions and transformations.</p></div>
+      <div class="card"><div class="card-icon">🔢</div><h3>Linear Algebra</h3><p>Matrices, vectors, eigenvalues, decompositions, systems of equations.</p></div>
+      <div class="card"><div class="card-icon">📊</div><h3>Statistics</h3><p>Regression, distributions, hypothesis testing, data analysis.</p></div>
+      <div class="card"><div class="card-icon">⚡</div><h3>Offline First</h3><p>No server, no internet needed. Works on any device, anywhere.</p></div>
+      <div class="card"><div class="card-icon">🔗</div><h3>Share Sessions</h3><p>Deep-link to saved .xws sessions via URL hash parameters.</p></div>
+    </div>
+
+    <!-- KEYBOARD SHORTCUTS -->
+    <div class="shortcuts reveal">
+      <h2>Keyboard Shortcuts</h2>
+      <div class="shortcut-grid">
+        <div class="shortcut"><kbd>Ctrl+L</kbd> Toggle theme</div>
+        <div class="shortcut"><kbd>F11</kbd> Fullscreen</div>
+        <div class="shortcut"><kbd>Esc</kbd> Close dialog</div>
+        <div class="shortcut"><kbd>Tab</kbd> Next field</div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer reveal">
+      Xcas © B. Parisse et al. · <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream</a> · GPL-3.0
+    </div>
   </div>
-  <div class="features">
-    <div class="card"><div class="card-icon">∑</div><h3>Symbolic Math</h3><p>Algebra, calculus, equation solving with exact results.</p></div>
-    <div class="card"><div class="card-icon">📐</div><h3>Geometry</h3><p>2D/3D geometric constructions and transformations.</p></div>
-    <div class="card"><div class="card-icon">🔢</div><h3>Linear Algebra</h3><p>Matrices, vectors, eigenvalues, decompositions.</p></div>
-    <div class="card"><div class="card-icon">📊</div><h3>Statistics</h3><p>Regression, distributions, hypothesis testing.</p></div>
-    <div class="card"><div class="card-icon">⚡</div><h3>Offline First</h3><p>No server, no internet needed. Works anywhere.</p></div>
-    <div class="card"><div class="card-icon">🔗</div><h3>Share Sessions</h3><p>Deep-link to saved .xws sessions via URL.</p></div>
-  </div>
-  <div class="footer">Xcas © B. Parisse et al. · <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream</a> · GPL-3.0</div>
-</div>
+
 <script>
-function toggleTheme(){var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.querySelector('.theme-toggle').textContent=d?'🌙':'☀';document.querySelector('meta[name="theme-color"]').content=d?'#f5f5fa':'#0f0f1a';localStorage.setItem('xcas-theme',d?'light':'dark')}
-(function(){var s=localStorage.getItem('xcas-theme');if(s){document.documentElement.setAttribute('data-theme',s);document.querySelector('.theme-toggle').textContent=s==='dark'?'☀':'🌙'}})();
+function toggleTheme(){
+  var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.querySelector('.nav-theme').textContent=d?'🌙':'☀';
+  document.querySelector('meta[name="theme-color"]').content=d?'#f4f4f9':'#0a0a14';
+  localStorage.setItem('xcas-theme',d?'light':'dark');
+}
+(function(){
+  var s=localStorage.getItem('xcas-theme');
+  if(s){document.documentElement.setAttribute('data-theme',s);document.querySelector('.nav-theme').textContent=s==='dark'?'☀':'🌙';}
+
+  // Scroll reveal
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+
+  // Smooth nav background on scroll
+  var nav=document.querySelector('.nav');
+  window.addEventListener('scroll',function(){
+    nav.style.borderBottomColor=window.scrollY>20?'var(--border)':'transparent';
+  },{passive:true});
+})();
 </script>
 </body>
 </html>
