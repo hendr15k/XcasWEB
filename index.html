@@ -2,218 +2,320 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Xcas — Browser-based Computer Algebra System. Symbolic math, calculus, linear algebra, programming. No install, works offline.">
-<meta name="theme-color" content="#0f0f1a">
+<meta name="theme-color" content="#0d1420">
 <title>Xcas — Computer Algebra System</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%230d1420'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-size='17' fill='%23e0a83c' font-family='Georgia,serif'%3E%E2%88%82%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a14;--bg2:#12122a;--surface:rgba(255,255,255,.03);--surface2:rgba(255,255,255,.06);
-  --border:rgba(255,255,255,.07);--text:#eaeaf4;--text2:#8888a8;
-  --accent:#6c5ce7;--accent2:#a78bfa;--glow:rgba(108,92,231,.3);
-  --grad1:#6c5ce7;--grad2:#a78bfa;--grad3:#c084fc;
-  --radius:16px;--radius-sm:10px;
+  --paper:#0d1420;--paper2:#101a29;--paper3:#152235;
+  --ink:#e8eef6;--ink2:#8fa3ba;--ink3:#4d6178;
+  --grid:rgba(120,160,210,.055);--grid2:rgba(120,160,210,.1);
+  --rule:rgba(140,170,210,.14);--rule2:rgba(140,170,210,.26);
+  --amber:#e0a83c;--amber-ink:#1a1206;--amber-dim:rgba(224,168,60,.1);
+  --teal:#57c7ae;--teal-dim:rgba(87,199,174,.1);
+  --disp:'Space Grotesk',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --math:'Source Serif 4',Georgia,serif;
 }
 [data-theme="light"]{
-  --bg:#f4f4f9;--bg2:#eaeaf2;--surface:rgba(0,0,0,.03);--surface2:rgba(0,0,0,.05);
-  --border:rgba(0,0,0,.08);--text:#14142a;--text2:#6b6b80;
-  --accent:#5a4bd1;--accent2:#7c6ce0;--glow:rgba(90,75,209,.12);
+  --paper:#f2f4f0;--paper2:#e9ede7;--paper3:#dfe5dd;
+  --ink:#152232;--ink2:#54687e;--ink3:#8b9cae;
+  --grid:rgba(30,80,140,.06);--grid2:rgba(30,80,140,.11);
+  --rule:rgba(20,60,110,.16);--rule2:rgba(20,60,110,.3);
+  --amber:#9a6d08;--amber-ink:#fdf6e3;--amber-dim:rgba(154,109,8,.09);
+  --teal:#0c7263;--teal-dim:rgba(12,114,99,.08);
 }
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--disp);background:var(--paper);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-/* ═══ Background ═══ */
-.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:.35;mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,black 20%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,black 20%,transparent 100%)}
-.bg-glow{position:fixed;z-index:0;border-radius:50%;filter:blur(140px);opacity:.12;pointer-events:none;will-change:transform}
-.bg-glow.g1{width:700px;height:700px;top:-250px;left:20%;background:var(--grad1);animation:floatGlow 20s ease-in-out infinite}
-.bg-glow.g2{width:500px;height:500px;bottom:-150px;right:15%;background:var(--grad3);animation:floatGlow 25s ease-in-out infinite reverse}
-@keyframes floatGlow{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-20px)}50%{transform:translate(-20px,30px)}75%{transform:translate(20px,10px)}}
-
-/* ═══ Layout ═══ */
-.container{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:100dvh;padding:60px 24px 40px;text-align:center}
-
-/* ═══ Nav ═══ */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(10,10,20,.6);border-bottom:1px solid var(--border);transition:all .3s}
-[data-theme="light"] .nav{background:rgba(244,244,249,.7)}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-.nav-brand svg{flex-shrink:0}
-.nav-brand span{font-weight:700;font-size:1.1rem;letter-spacing:-.02em}
-.nav-right{display:flex;align-items:center;gap:8px}
-.nav-link{font-size:.85rem;font-weight:500;color:var(--text2);text-decoration:none;padding:8px 14px;border-radius:var(--radius-sm);transition:all .2s}
-.nav-link:hover{color:var(--text);background:var(--surface2)}
-.nav-theme{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:1rem}
-.nav-theme:hover{border-color:var(--accent2);color:var(--text);transform:scale(1.08)}
-
-/* ═══ Hero ═══ */
-.hero{margin-top:80px;margin-bottom:64px;max-width:700px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:.78rem;color:var(--text2);margin-bottom:28px;backdrop-filter:blur(10px);animation:fadeInUp .6s .1s both}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 8px #00d68f;animation:pulse 2s infinite}
-h1{font-size:clamp(3rem,9vw,5.5rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:20px;animation:fadeInUp .6s .2s both}
-h1 .grad{background:linear-gradient(135deg,var(--grad1) 0%,var(--grad2) 50%,var(--grad3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gradShift 6s ease infinite}
-@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.subtitle{font-size:clamp(1.05rem,2.5vw,1.35rem);color:var(--text2);max-width:520px;line-height:1.65;margin:0 auto 44px;animation:fadeInUp .6s .3s both}
-
-/* ═══ Actions ═══ */
-.actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:72px;animation:fadeInUp .6s .4s both}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;border-radius:14px;font-size:1rem;font-weight:600;text-decoration:none;transition:all .3s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;position:relative;overflow:hidden}
-.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
-.btn:hover::after{opacity:1}
-.btn-primary{background:linear-gradient(135deg,var(--grad1),var(--grad2));color:#fff;box-shadow:0 4px 20px var(--glow),0 1px 3px rgba(0,0,0,.2)}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(--glow),0 2px 6px rgba(0,0,0,.25)}
-.btn-primary:active{transform:translateY(-1px)}
-.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border);backdrop-filter:blur(10px)}
-.btn-secondary:hover{border-color:var(--accent2);transform:translateY(-2px);background:var(--surface2)}
-
-/* ═══ Features ═══ */
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:840px;width:100%;margin-bottom:48px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px;backdrop-filter:blur(12px);transition:all .3s cubic-bezier(.4,0,.2,1);text-align:left;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent2),transparent);opacity:0;transition:opacity .3s}
-.card:hover{border-color:rgba(167,139,250,.3);background:var(--surface2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.15)}
-.card:hover::before{opacity:1}
-.card-icon{font-size:2rem;margin-bottom:14px;display:inline-block;transition:transform .3s}
-.card:hover .card-icon{transform:scale(1.15)}
-.card h3{font-size:.95rem;font-weight:600;margin-bottom:8px;letter-spacing:-.01em}
-.card p{font-size:.82rem;color:var(--text2);line-height:1.55}
-
-/* ═══ Keyboard Shortcuts ═══ */
-.shortcuts{max-width:840px;width:100%;margin-bottom:48px;animation:fadeInUp .6s .8s both}
-.shortcuts h2{font-size:1rem;font-weight:600;margin-bottom:16px;color:var(--text2)}
-.shortcut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-.shortcut{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.82rem;color:var(--text2)}
-.shortcut kbd{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-family:'Inter',monospace;font-size:.75rem;font-weight:600;color:var(--text);min-width:28px;text-align:center}
-
-/* ═══ Footer ═══ */
-.footer{font-size:.75rem;color:var(--text2);padding:20px 0}
-.footer a{color:var(--accent2);text-decoration:none;transition:color .2s}
-.footer a:hover{color:var(--accent);text-decoration:underline}
-
-/* ═══ Animations ═══ */
-@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-.card{animation:fadeInUp .5s calc(.5s + var(--i,0) * .08s) both}
-.card:nth-child(1){--i:0}
-.card:nth-child(2){--i:1}
-.card:nth-child(3){--i:2}
-.card:nth-child(4){--i:3}
-.card:nth-child(5){--i:4}
-.card:nth-child(6){--i:5}
-
-/* ═══ Responsive ═══ */
-@media(max-width:768px){
-  .features{grid-template-columns:repeat(2,1fr)}
-  .shortcut-grid{grid-template-columns:1fr 1fr}
+/* ── layered graph-paper background ── */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    linear-gradient(var(--grid2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:24px 24px,24px 24px,120px 120px,120px 120px;
 }
-@media(max-width:520px){
-  .features{grid-template-columns:1fr}
-  .actions{flex-direction:column;width:100%;max-width:320px}
-  .btn{width:100%;justify-content:center}
-  .shortcut-grid{grid-template-columns:1fr}
-  .nav-link{display:none}
-  h1{font-size:2.5rem}
-}
+.bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 20%,transparent 40%,var(--paper) 100%)}
+.glyph{position:fixed;z-index:0;font-family:var(--math);font-style:italic;color:var(--ink);opacity:.035;pointer-events:none;user-select:none;line-height:1;animation:drift 26s ease-in-out infinite alternate}
+.glyph.a{font-size:34vw;top:-6vw;right:-4vw}
+.glyph.b{font-size:26vw;bottom:-8vw;left:-3vw;animation-delay:-13s}
+@keyframes drift{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(3vw) rotate(2deg)}}
 
-/* ═══ Scroll Reveal ═══ */
-.reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.4,0,.2,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ── toolbar ── */
+.bar{position:fixed;top:0;left:0;right:0;z-index:50;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:var(--paper);border-bottom:1px solid var(--rule)}
+.bar-id{display:flex;align-items:center;gap:10px;color:var(--ink2)}
+.bar-id b{color:var(--ink);font-weight:500}
+.bar-id .sym{font-family:var(--math);font-style:italic;font-size:16px;color:var(--amber);line-height:0}
+.bar-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 2.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.bar nav{display:flex;gap:2px;align-items:center}
+.bar nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink2);text-decoration:none;padding:6px 11px;border:1px solid transparent;transition:all .18s}
+.bar nav a:hover{color:var(--amber);border-color:var(--rule2);background:var(--amber-dim)}
+.bar .toggle{background:none;border:1px solid var(--rule);color:var(--ink2);width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:13px;margin-left:10px;transition:all .18s}
+.bar .toggle:hover{color:var(--amber);border-color:var(--amber)}
+
+/* ── opening: worksheet, not hero ── */
+.sheet{padding:128px 0 72px;display:grid;grid-template-columns:1.55fr .85fr;gap:56px;align-items:start}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.tag::after{content:'';height:1px;width:64px;background:var(--rule2)}
+.formula{font-family:var(--math);font-style:italic;font-weight:300;font-size:clamp(2.5rem,6.4vw,4.6rem);line-height:1.18;letter-spacing:-.01em;margin-bottom:14px}
+.formula .hl{color:var(--amber)}
+.formula .rs{color:var(--teal)}
+.formula-note{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.05em;margin-bottom:40px}
+
+.prompt{border:1px solid var(--rule);background:var(--paper2);padding:22px 24px;max-width:560px;position:relative;transition:border-color .25s,box-shadow .25s}
+.prompt:hover{border-color:var(--rule2);box-shadow:0 8px 32px rgba(0,0,0,.22)}
+.prompt::before{content:'worksheet — session 01';position:absolute;top:-8px;left:16px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);background:var(--paper);padding:0 8px}
+.p-line{font-family:var(--mono);font-size:clamp(13px,1.6vw,15px);line-height:1.9;white-space:pre-wrap;min-height:3.8em}
+.p-sig{color:var(--amber);font-weight:500}
+.p-cmd{color:var(--ink)}
+.p-out{color:var(--teal)}
+.caret{display:inline-block;width:.55em;height:1.05em;background:var(--amber);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+.sheet-actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:13px 26px;border:1px solid var(--rule2);transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-go{background:var(--amber);color:var(--amber-ink);border-color:var(--amber);font-weight:500}
+.btn-go:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--rule2)}
+.btn-ghost{color:var(--ink2)}
+.btn-ghost:hover{color:var(--amber);border-color:var(--amber);background:var(--amber-dim)}
+
+/* spec column */
+.spec{border-top:2px solid var(--rule2);padding-top:18px}
+.spec h2{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;color:var(--ink3);text-transform:uppercase;margin-bottom:16px}
+.spec-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:11px 0;border-bottom:1px solid var(--rule);font-size:12.5px;transition:padding-left .2s}
+.spec-row:hover{padding-left:8px}
+.spec-row dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase}
+.spec-row dd{color:var(--ink);text-align:right;font-weight:500}
+.spec-row dd.ok{color:var(--teal)}
+.spec-live{margin-top:26px;border:1px solid var(--rule);background:var(--paper2);padding:16px 18px;font-family:var(--mono);font-size:11px;color:var(--ink2);line-height:2}
+.spec-live .cur{color:var(--amber)}
+
+/* ── formula ticker ── */
+.ticker{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);overflow:hidden;padding:16px 0;background:var(--paper2)}
+.ticker-track{display:flex;gap:0;width:max-content;animation:tick 46s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker span{font-family:var(--math);font-style:italic;font-size:1.15rem;color:var(--ink2);padding:0 28px;white-space:nowrap;border-right:1px solid var(--rule)}
+.ticker span i{color:var(--amber);font-style:italic}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ── capabilities ledger ── */
+section{padding:88px 0 0}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:36px}
+.sec-head .no{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.15em}
+.sec-head h2{font-size:clamp(1.5rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.02em}
+.sec-head .rule{flex:1;height:1px;background:var(--rule);align-self:center}
+.ledger{border-top:1px solid var(--rule2)}
+.row{display:grid;grid-template-columns:64px 1.1fr 1fr .9fr;gap:20px;align-items:baseline;padding:24px 10px;border-bottom:1px solid var(--rule);position:relative;transition:background .2s,padding-left .25s}
+.row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber);transform:scaleY(0);transform-origin:top;transition:transform .25s}
+.row:hover{background:var(--paper2);padding-left:22px}
+.row:hover::before{transform:scaleY(1)}
+.row .idx{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.1em;transition:color .2s}
+.row:hover .idx{color:var(--amber)}
+.row h3{font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.row h3 small{display:block;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-top:5px}
+.row code{font-family:var(--mono);font-size:12px;color:var(--teal);background:var(--teal-dim);padding:5px 9px;border:1px solid var(--rule);align-self:center;justify-self:start;transition:border-color .2s}
+.row:hover code{border-color:var(--teal)}
+.row p{font-size:.86rem;color:var(--ink2);line-height:1.6}
+
+/* ── reference ── */
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.key{display:flex;align-items:center;gap:12px;border:1px solid var(--rule);background:var(--paper2);padding:13px 16px;transition:all .18s}
+.key:hover{border-color:var(--amber);transform:translateX(4px)}
+.key kbd{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--amber);background:var(--amber-dim);border:1px solid var(--rule2);padding:4px 9px;min-width:58px;text-align:center}
+.key span{font-size:.8rem;color:var(--ink2)}
+.about{font-size:.9rem;color:var(--ink2);line-height:1.85;border-left:2px solid var(--rule2);padding-left:22px}
+.about em{font-family:var(--math);font-style:italic;color:var(--ink)}
+.about a{color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-dim)}
+.about a:hover{border-color:var(--amber)}
+
+footer{margin-top:96px;border-top:1px solid var(--rule);padding:26px 0 34px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ink3)}
+footer a{color:var(--ink2);text-decoration:none}
+footer a:hover{color:var(--amber)}
+
+/* live coordinate readout */
+.readout{position:fixed;left:18px;bottom:14px;z-index:40;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--ink3);pointer-events:none}
+.readout b{color:var(--teal);font-weight:400}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:920px){
+  .sheet{grid-template-columns:1fr;gap:44px;padding-top:110px}
+  .row{grid-template-columns:44px 1fr;grid-template-rows:auto auto}
+  .row code{grid-column:2}
+  .row p{grid-column:2}
+  .ref-grid{grid-template-columns:1fr}
+  .bar nav a:not(:last-of-type){display:none}
+  .readout{display:none}
+}
+@media(max-width:540px){.keys{grid-template-columns:1fr}.glyph{display:none}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow g1"></div>
-  <div class="bg-glow g2"></div>
+<div class="bg"></div>
+<div class="glyph a">∮</div>
+<div class="glyph b">∂</div>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <a href="/" class="nav-brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect width="28" height="28" rx="8" fill="url(#navg)"/>
-        <text x="50%" y="55%" text-anchor="middle" dominant-baseline="middle" font-size="14" font-weight="800" fill="#fff" font-family="Inter,sans-serif">∑</text>
-        <defs><linearGradient id="navg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6c5ce7"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
-      </svg>
-      <span>Xcas</span>
-    </a>
-    <div class="nav-right">
-      <a href="#features" class="nav-link">Features</a>
-      <a href="https://github.com/hendr15k/XcasWEB" class="nav-link" target="_blank">GitHub</a>
-      <button class="nav-theme" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
-    </div>
-  </nav>
-
-  <div class="container">
-    <!-- HERO -->
-    <div class="hero">
-      <div class="hero-badge"><span class="dot"></span> Offline-ready · No install required</div>
-      <h1><span class="grad">Xcas</span></h1>
-      <p class="subtitle">Full computer algebra system in your browser. Symbolic math, calculus, linear algebra, statistics &amp; programming — runs entirely on your device.</p>
-      <div class="actions">
-        <a href="xcas.html" class="btn btn-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Launch Xcas
-        </a>
-        <a href="https://github.com/hendr15k/XcasWEB" class="btn btn-secondary" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          Source
-        </a>
-      </div>
-    </div>
-
-    <!-- FEATURES -->
-    <div id="features" class="features">
-      <div class="card"><div class="card-icon">∑</div><h3>Symbolic Math</h3><p>Algebra, calculus, equation solving with exact results — no numerical approximation.</p></div>
-      <div class="card"><div class="card-icon">📐</div><h3>Geometry</h3><p>Interactive 2D/3D geometric constructions and transformations.</p></div>
-      <div class="card"><div class="card-icon">🔢</div><h3>Linear Algebra</h3><p>Matrices, vectors, eigenvalues, decompositions, systems of equations.</p></div>
-      <div class="card"><div class="card-icon">📊</div><h3>Statistics</h3><p>Regression, distributions, hypothesis testing, data analysis.</p></div>
-      <div class="card"><div class="card-icon">⚡</div><h3>Offline First</h3><p>No server, no internet needed. Works on any device, anywhere.</p></div>
-      <div class="card"><div class="card-icon">🔗</div><h3>Share Sessions</h3><p>Deep-link to saved .xws sessions via URL hash parameters.</p></div>
-    </div>
-
-    <!-- KEYBOARD SHORTCUTS -->
-    <div class="shortcuts reveal">
-      <h2>Keyboard Shortcuts</h2>
-      <div class="shortcut-grid">
-        <div class="shortcut"><kbd>Ctrl+L</kbd> Toggle theme</div>
-        <div class="shortcut"><kbd>F11</kbd> Fullscreen</div>
-        <div class="shortcut"><kbd>Esc</kbd> Close dialog</div>
-        <div class="shortcut"><kbd>Tab</kbd> Next field</div>
-      </div>
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer reveal">
-      Xcas © B. Parisse et al. · <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream</a> · GPL-3.0
-    </div>
+<header class="bar">
+  <div class="bar-id">
+    <span class="sym">∂</span><b>XCAS</b><span>giac 12 · wasm</span><span class="bar-dot"></span><span>READY</span>
   </div>
+  <nav>
+    <a href="#capabilities">CAPABILITIES</a>
+    <a href="#reference">REFERENCE</a>
+    <a href="https://github.com/hendr15k/XcasWEB" target="_blank">SOURCE</a>
+    <button class="toggle" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- opening worksheet -->
+  <div class="sheet">
+    <div>
+      <div class="tag">Computer algebra · exact arithmetic</div>
+      <div class="formula">
+        &int;<sub>&minus;&infin;</sub><sup>&infin;</sup> e<sup>&minus;x&sup2;</sup> dx <span class="hl">=</span> <span class="rs">&radic;&pi;</span>
+      </div>
+      <div class="formula-note">// computed symbolically, in your browser, with nothing installed</div>
+
+      <div class="prompt">
+        <div class="p-line"><span class="p-sig">&gt;&gt; </span><span class="p-cmd" id="p-cmd"></span><span class="caret" id="caret"></span><br><span class="p-out" id="p-out"></span></div>
+      </div>
+
+      <div class="sheet-actions">
+        <a class="btn btn-go" href="xcas.html">Launch Xcas &rarr;</a>
+        <a class="btn btn-ghost" href="https://github.com/hendr15k/XcasWEB" target="_blank">View source</a>
+      </div>
+    </div>
+
+    <aside class="spec">
+      <h2>Engine specification</h2>
+      <dl>
+        <div class="spec-row"><dt>Kernel</dt><dd>Giac / Xcas</dd></div>
+        <div class="spec-row"><dt>Target</dt><dd>WebAssembly</dd></div>
+        <div class="spec-row"><dt>Precision</dt><dd>Exact &amp; arbitrary</dd></div>
+        <div class="spec-row"><dt>Network</dt><dd class="ok">Not required</dd></div>
+        <div class="spec-row"><dt>License</dt><dd>GPL-3.0</dd></div>
+      </dl>
+      <div class="spec-live">
+        <span class="cur">&gt;</span> status: <span id="live-status">engine idle</span><br>
+        <span class="cur">&gt;</span> mode&nbsp;&nbsp;: symbolic / exact<br>
+        <span class="cur">&gt;</span> session: local &middot; shareable via .xws
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- formula ticker -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<div class="wrap">
+  <!-- capabilities ledger -->
+  <section id="capabilities">
+    <div class="sec-head reveal"><span class="no">01</span><h2>Capabilities</h2><span class="rule"></span></div>
+    <div class="ledger">
+      <div class="row reveal"><span class="idx">A1</span><h3>Symbolic Algebra<small>exact results</small></h3><code>factor(x^4-1)</code><p>Factoring, simplification, equation solving and polynomial arithmetic — no numerical approximation unless you ask for it.</p></div>
+      <div class="row reveal"><span class="idx">A2</span><h3>Calculus<small>analysis</small></h3><code>int(sin(x)/x,x)</code><p>Derivatives, antiderivatives, limits, Taylor series and ordinary differential equations in closed form.</p></div>
+      <div class="row reveal"><span class="idx">A3</span><h3>Linear Algebra<small>matrices</small></h3><code>eigenvalues(m)</code><p>Eigenvalues, LU/QR/SVD decompositions, vector spaces and full systems of linear equations.</p></div>
+      <div class="row reveal"><span class="idx">A4</span><h3>Geometry<small>2D / 3D</small></h3><code>plot(sin(x))</code><p>Interactive constructions, transformations and locus problems with live function plotting.</p></div>
+      <div class="row reveal"><span class="idx">A5</span><h3>Statistics<small>data</small></h3><code>regression(x,y)</code><p>Regression models, probability distributions, hypothesis testing and exploratory analysis.</p></div>
+      <div class="row reveal"><span class="idx">A6</span><h3>Programmable<small>giac language</small></h3><code>for k:=1 to n</code><p>A complete scripting language with functions, loops and recursion — algorithms run at native speed.</p></div>
+    </div>
+  </section>
+
+  <!-- reference -->
+  <section id="reference">
+    <div class="sec-head reveal"><span class="no">02</span><h2>Reference</h2><span class="rule"></span></div>
+    <div class="ref-grid">
+      <div class="keys reveal">
+        <div class="key"><kbd>Ctrl+L</kbd><span>Toggle theme</span></div>
+        <div class="key"><kbd>F11</kbd><span>Fullscreen</span></div>
+        <div class="key"><kbd>Esc</kbd><span>Close dialog</span></div>
+        <div class="key"><kbd>Tab</kbd><span>Next field</span></div>
+      </div>
+      <p class="about reveal">
+        <em>Xcas</em> is the browser deployment of Bernard Parisse's Giac kernel, compiled with Emscripten and delivered as a single self-contained page. Every computation runs on your own device; sessions persist as <em>.xws</em> files and can be shared through a plain URL. <a href="https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html">Giac upstream &nearr;</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="reveal">
+    <span>XCAS &copy; B. Parisse et al. &middot; GPL-3.0</span>
+    <span>engine: giac &middot; emscripten &middot; 100% client-side</span>
+  </footer>
+</div>
+
+<div class="readout">x <b id="rx">0.000</b>&nbsp;&nbsp;y <b id="ry">0.000</b></div>
 
 <script>
 function toggleTheme(){
   var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
   h.setAttribute('data-theme',d?'light':'dark');
-  document.querySelector('.nav-theme').textContent=d?'🌙':'☀';
-  document.querySelector('meta[name="theme-color"]').content=d?'#f4f4f9':'#0a0a14';
+  document.querySelector('meta[name="theme-color"]').content=d?'#f2f4f0':'#0d1420';
   localStorage.setItem('xcas-theme',d?'light':'dark');
 }
 (function(){
   var s=localStorage.getItem('xcas-theme');
-  if(s){document.documentElement.setAttribute('data-theme',s);document.querySelector('.nav-theme').textContent=s==='dark'?'☀':'🌙';}
+  if(s){document.documentElement.setAttribute('data-theme',s);
+    document.querySelector('meta[name="theme-color"]').content=s==='light'?'#f2f4f0':'#0d1420';}
 
-  // Scroll reveal
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
-  },{threshold:.15});
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
+  },{threshold:.12});
   document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
 
-  // Smooth nav background on scroll
-  var nav=document.querySelector('.nav');
-  window.addEventListener('scroll',function(){
-    nav.style.borderBottomColor=window.scrollY>20?'var(--border)':'transparent';
+  var F=['e<i>i&pi;</i> + 1 = 0','det(AB) = det A &middot; det B','&zeta;(s) = &Sigma; n<sup>&minus;s</sup>','&oint; f dz = 2&pi;i &Sigma; Res f','(a+b)<i>n</i> = &Sigma; C(n,k) a<i>k</i> b<i>n&minus;k</i>','&nabla;&times;E = &minus;&part;B/&part;t','&int; f dg = fg &minus; &int; g df','a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup>'];
+  var t=document.getElementById('ticker');
+  t.innerHTML=(F.concat(F)).map(function(f){return '<span>'+f+'</span>';}).join('');
+
+  var SESSIONS=[
+    ['factor(x^4-1)','(x-1)(x+1)(x^2+1)'],
+    ['solve(x^2-4=0,x)','[-2,2]'],
+    ['diff(sin(x)/x,x)','(x*cos(x)-sin(x))/x^2'],
+    ['eigenvalues([[2,1],[1,2]])','[3,1]'],
+    ['int(x*exp(x),x)','(x-1)*exp(x)'],
+    ['limit((1+1/n)^n,n=+inf)','e']
+  ];
+  var ci=0,ti=0,phase='type',hold=0;
+  var cmdEl=document.getElementById('p-cmd'),outEl=document.getElementById('p-out'),
+      live=document.getElementById('live-status');
+  function step(){
+    var pair=SESSIONS[ci];
+    if(phase==='type'){
+      ti++;cmdEl.textContent=pair[0].slice(0,ti);
+      if(ti>=pair[0].length){phase='hold';hold=6;}
+    }else if(phase==='hold'){
+      if(--hold<=0){outEl.textContent=pair[1];phase='wait';hold=26;}
+    }else{
+      if(--hold<=0){outEl.textContent='';cmdEl.textContent='';ti=0;ci=(ci+1)%SESSIONS.length;phase='type';}
+    }
+    setTimeout(step,phase==='type'?52:90);
+  }
+  step();
+  var STATUSES=['engine idle','kernel ready','awaiting input','symbolic mode'];
+  var si=0;setInterval(function(){si=(si+1)%STATUSES.length;live.textContent=STATUSES[si];},3000);
+
+  var rx=document.getElementById('rx'),ry=document.getElementById('ry');
+  window.addEventListener('pointermove',function(e){
+    rx.textContent=(e.clientX/window.innerWidth).toFixed(3);
+    ry.textContent=(1-e.clientY/window.innerHeight).toFixed(3);
   },{passive:true});
 })();
 </script>
